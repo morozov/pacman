@@ -11,7 +11,7 @@ Pac-Man.tzx.zip:
 	wget http://www.worldofspectrum.org/pub/sinclair/games/p/Pac-Man.tzx.zip
 
 Pac-Man.tzx: Pac-Man.tzx.zip
-	unzip -u Pac-Man.tzx.zip
+	unzip -u Pac-Man.tzx.zip && touch Pac-Man.tzx
 
 Pac-Man.tap: Pac-Man.tzx
 	tzx2tap Pac-Man.tzx
