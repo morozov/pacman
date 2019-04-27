@@ -1,7 +1,9 @@
 ; Move loader to a safe location
-LD HL, $5D83 ; source = PROG
-             ; + 58 bytes offset of the loader
-             ; + 14 bytes for the size of this routine itself
+LD DE, $0B   ; the offset of the block to be moved
+             ; relatively to the address after CALL minus 1
+INC E        ; add 1 to reset the Z flag
+CALL $1FC6   ; this is essentially LD HL, PC
+ADD HL, DE   ; now HL points to the begginning of the loader
 LD DE, $F800 ; destination
 LD BC, $002C ; the size of the remaining part after JP
 LDIR
