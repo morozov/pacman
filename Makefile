@@ -25,6 +25,19 @@ headless.bin: headless.000
 screen.scr: headless.bin
 	head -c 6912 headless.bin > screen.scr
 
+screen.tap: screen.scr
+	bin2tap -o screen.tap -a 16384 screen.scr
+
+screen.000: screen.scr
+	binto0 screen.scr 3 16384
+
+screen.$$C: screen.000
+	0tohob screen.000
+
+screen.trd: screen.$$C
+	createtrd screen.trd
+	hobeta2trd screen.\$$C screen.trd
+
 data.bin: headless.bin
 	tail -c +6913 headless.bin > data.bin
 
@@ -81,5 +94,10 @@ clean:
 		Pac-Man.trd \
 		Pac-Man.tzx \
 		Pac-Man.tzx.zip \
+		screen.\$$C \
+		screen.000 \
 		screen.scr \
-		screenz.\$$C
+		screen.trd \
+		screenz.\$$C \
+		screen.tap \
+		screen.trd
