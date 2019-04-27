@@ -1,8 +1,6 @@
 ; Move loader to a safe location
-LD HL, $5D4E ; source = PROG
-             ; + 2 bytes for the line number
-             ; + 2 bytes for the line length
-             ; + 1 byte for REM
+LD HL, $5D83 ; source = PROG
+             ; + 58 bytes offset of the loader
              ; + 14 bytes for the size of this routine itself
 LD DE, $F800 ; destination
 LD BC, $002C ; the size of the remaining part after JP

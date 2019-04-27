@@ -21,7 +21,8 @@ boot_stu.bas: boot_stu.000
 
 boot.bin: boot_stu.bas loader.bin
 	cp boot_stu.bas boot.bin
-	breplace 5 loader.bin boot.bin
+	# 58 is the offset of the loader placeholder in compiled BASIC boot binary
+	breplace 58 loader.bin boot.bin
 
 boot.000: boot.bin
 	binto0 boot.bin 0 10
