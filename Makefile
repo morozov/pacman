@@ -1,7 +1,10 @@
-Pac-Man.trd: boot.$$B
+# The compressed screen is created by Laser Compact v5.2
+# and cannot be generated at the build time
+# see https://spectrumcomputing.co.uk/?cat=96&id=21446
+Pac-Man.trd: boot.$$B hob/screenz.$$C
 	createtrd Pac-Man.trd
 	hobeta2trd boot.\$$B Pac-Man.trd
-	hobeta2trd screenz.\$$C Pac-Man.trd
+	hobeta2trd hob/screenz.\$$C Pac-Man.trd
 	hobeta2trd data.\$$C Pac-Man.trd
 
 loader.bin: loader.asm
@@ -31,4 +34,15 @@ boot.$$B: boot.000
 	0tohob boot.000
 
 clean:
-	rm -f loader.bin boot.bas boot.\$$B boot.stub.bas boot.000 boot.bin boot_stu.000 boot_stu.bas boot.stub.tap Pac-Man.trd
+	rm -f \
+		boot.000 \
+		boot.\$$B \
+		boot.bas \
+		boot.bin \
+		boot_stu.000 \
+		boot_stu.bas \
+		boot.stub.bas \
+		boot.stub.tap \
+		loader.bin \
+		Pac-Man.trd \
+		screenz.\$$C
