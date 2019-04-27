@@ -75,29 +75,13 @@ boot.$$B: boot.000
 
 clean:
 	rm -f \
-		boot.000 \
-		boot.\$$B \
-		boot.bas \
-		boot.bin \
-		boot_stu.000 \
-		boot_stu.bas \
-		boot.stub.bas \
-		boot.stub.tap \
-		data.000 \
-		data.bin \
-		data.\$$C \
-		headless.000 \
-		headless.bin \
-		loader.bin \
-		PAC-MAN.000 \
-		Pac-Man.tap \
-		Pac-Man.trd \
-		Pac-Man.tzx \
-		Pac-Man.tzx.zip \
-		screen.\$$C \
-		screen.000 \
-		screen.scr \
-		screen.trd \
-		screenz.\$$C \
-		screen.tap \
-		screen.trd
+		*.000 \
+		*.\$$B \
+		*.\$$C \
+		*.bas \
+		*.bin \
+		*.scr \
+		*.tap \
+		*.trd \
+		*.tzx \
+		*.zip
