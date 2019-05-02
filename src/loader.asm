@@ -26,6 +26,9 @@ CALL $3D13       ;
 LD HL, $6000   ; this is where we loaded the data
 LD DE, $5B00   ; this is where it's supposed to be
 LD BC, $2500   ; the size of the data
-LDIR
+LDIR           ;
+
+; Call the entry point via the stack pointer same as
+; the original loader does
 LD SP, $5D7C
 RET
