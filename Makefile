@@ -47,11 +47,11 @@ data.000: data.bin
 data.$$C: data.000
 	0tohob data.000
 
-loader.bin: loader.asm
-	pasmo --bin loader.asm loader.bin
+loader.bin: src/loader.asm
+	pasmo --bin src/loader.asm loader.bin
 
-boot.stub.bas: boot.bas.tpl loader.bin
-	sed "s/__LOADER__/$(shell head -c $(shell stat --printf="%s" loader.bin) /dev/zero | tr '\0' -)/" boot.bas.tpl > boot.stub.bas
+boot.stub.bas: src/boot.bas loader.bin
+	sed "s/__LOADER__/$(shell head -c $(shell stat --printf="%s" loader.bin) /dev/zero | tr '\0' -)/" src/boot.bas > boot.stub.bas
 
 boot.stub.tap: boot.stub.bas
 	bas2tap -sboot.stub boot.stub.bas boot.stub.tap
