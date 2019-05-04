@@ -1,3 +1,6 @@
+Pac-Man.scl: Pac-Man.trd
+	trd2scl Pac-Man.trd Pac-Man.scl
+
 # The compressed screen is created by Laser Compact v5.2
 # and cannot be generated at the build time
 # see https://spectrumcomputing.co.uk/?cat=96&id=21446
@@ -6,6 +9,15 @@ Pac-Man.trd: boot.$$B hob/screenz.$$C data.$$C
 	hobeta2trd boot.\$$B Pac-Man.trd
 	hobeta2trd hob/screenz.\$$C Pac-Man.trd
 	hobeta2trd data.\$$C Pac-Man.trd
+
+	# Write the correct length to the first file (offset 13)
+	# The lenth is 1 (boot) + 8 (loading screen) + 37 (data) = 46
+	# Got to use the the octal notation since it's the only format of binary data POSIX printf understands
+	# https://pubs.opengroup.org/onlinepubs/9699919799/utilities/printf.html#tag_20_94_13
+	printf '\056' | dd of=Pac-Man.trd bs=1 seek=13 conv=notrunc status=none
+
+	# Remove two other files (fill 2×16 bytes starting offset 16 with zeroes)
+	dd if=/dev/zero of=Pac-Man.trd bs=1 seek=16 count=32 conv=notrunc status=none
 
 Pac-Man.tzx.zip:
 	wget http://www.worldofspectrum.org/pub/sinclair/games/p/Pac-Man.tzx.zip
