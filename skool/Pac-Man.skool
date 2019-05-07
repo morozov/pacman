@@ -1,0 +1,59 @@
+; Loading screen
+i$4000
+
+i$5B00
+
+; Decoded loader
+c$5D00 LD IXh,$40
+ $5D03 LD IXl,$00
+ $5D06 LD D,IXh
+ $5D08 LD E,IXl
+ $5D0A LD HL,$5DA6
+ $5D0D LD (IY+$03),L
+ $5D10 LD (IY+$04),H
+ $5D13 LD SP,$5D7C
+ $5D16 EX DE,HL
+ $5D17 LD IXl,E
+ $5D19 LD A,IXl
+ $5D1B EX DE,HL
+ $5D1C LD IXl,$00
+ $5D1F AND A
+ $5D20 CCF
+ $5D21 EX AF,AF'
+ $5D22 JP $055A
+
+i$5D25
+
+; Bootstrap
+c$5D26 DI
+ $5D27 IM 1
+
+; Decoder of the loader
+c$5D29 LD D,IYh      ; {Load the address of ERR_NR into DE
+ $5D2B LD E,IYl      ; }
+ $5D2D LD B,$25      ; Length of the encoded loader
+ $5D2F EX DE,HL      ; {Exchange DE and HL so that now HL contains $5C3A
+ $5D30 LD DE,$0019   ; }
+ $5D33 ADD HL,DE     ; Increment HL by DE ($19) so now it contains $5C53 which
+                     ; is PROG
+ $5D34 LD E,(HL)     ; {Load the address of PROG into DE
+ $5D35 INC HL        ;
+ $5D36 LD D,(HL)     ; }
+ $5D37 LD IXh,D      ;
+ $5D39 LD IXl,E      ;
+ $5D3B LD A,(IX+$7F) ; Load A with the XOR key from the offset relative to PROG
+ $5D3E LD HL,$0035   ; {Offset of the encoded loader relative to PROG
+ $5D41 ADD HL,DE     ; }
+ $5D42 PUSH HL       ; Push the address of the loader on stack
+*$5D43 XOR (HL)      ; {Un-XOR the loader
+ $5D44 LD (HL),A     ;
+ $5D45 INC HL        ;
+ $5D46 DJNZ $5D43    ; }
+ $5D48 AND (HL)      ; {Jump to the decoded loader
+ $5D49 RET NZ        ; }
+
+; XOR key
+b$5D4A DEFB $77
+
+; ignore
+i$5D4B
