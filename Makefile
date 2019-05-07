@@ -62,25 +62,15 @@ data.$$C: data.000
 loader.bin: src/loader.asm
 	pasmo --bin src/loader.asm loader.bin
 
-boot.stub.bas: src/boot.bas loader.bin
-	sed "s/__LOADER__/$(shell head -c $(shell stat --printf="%s" loader.bin) /dev/zero | tr '\0' -)/" src/boot.bas > boot.stub.bas
+boot.bas: src/boot.bas loader.bin
+	# Replace the __LOADER__ placeholder with the machine codes with bytes represented as {XX}
+	sed "s/__LOADER__/$(shell hexdump -e '1/1 "{%02x}"' loader.bin)/" src/boot.bas > boot.bas
 
-boot.stub.tap: boot.stub.bas
-	bas2tap -sboot.stub boot.stub.bas boot.stub.tap
+boot.tap: boot.bas
+	bas2tap -sboot -a10 boot.bas boot.tap
 
-boot_stu.000: boot.stub.tap
-	tapto0 -f boot.stub.tap
-
-boot_stu.bas: boot_stu.000
-	0tobin boot_stu.000
-
-boot.bin: boot_stu.bas loader.bin
-	cp boot_stu.bas boot.bin
-	# 58 is the offset of the loader placeholder in compiled BASIC boot binary
-	breplace 58 loader.bin boot.bin
-
-boot.000: boot.bin
-	binto0 boot.bin 0 10
+boot.000: boot.tap
+	tapto0 -f boot.tap
 
 boot.$$B: boot.000
 	0tohob boot.000
