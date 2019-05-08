@@ -5,8 +5,8 @@ Pac-Man.scl: Pac-Man.trd
 # and cannot be generated at the build time
 # see https://spectrumcomputing.co.uk/?cat=96&id=21446
 Pac-Man.trd: boot.$$B hob/screenz.$$C data.$$C
-	# Create a temporary file first in order to make sure the target file
-	# gets created only after the entire job has succeeded
+# Create a temporary file first in order to make sure the target file
+# gets created only after the entire job has succeeded
 	$(eval TMPFILE=$(shell tempfile))
 
 	createtrd $(TMPFILE)
@@ -14,16 +14,16 @@ Pac-Man.trd: boot.$$B hob/screenz.$$C data.$$C
 	hobeta2trd hob/screenz.\$$C $(TMPFILE)
 	hobeta2trd data.\$$C $(TMPFILE)
 
-	# Write the correct length to the first file (offset 13)
-	# The lenth is 1 (boot) + 8 (loading screen) + 37 (data) = 46
-	# Got to use the the octal notation since it's the only format of binary data POSIX printf understands
-	# https://pubs.opengroup.org/onlinepubs/9699919799/utilities/printf.html#tag_20_94_13
+# Write the correct length to the first file (offset 13)
+# The lenth is 1 (boot) + 8 (loading screen) + 37 (data) = 46
+# Got to use the the octal notation since it's the only format of binary data POSIX printf understands
+# https://pubs.opengroup.org/onlinepubs/9699919799/utilities/printf.html#tag_20_94_13
 	printf '\056' | dd of=$(TMPFILE) bs=1 seek=13 conv=notrunc status=none
 
-	# Remove two other files (fill 2×16 bytes starting offset 16 with zeroes)
+# Remove two other files (fill 2×16 bytes starting offset 16 with zeroes)
 	dd if=/dev/zero of=$(TMPFILE) bs=1 seek=16 count=32 conv=notrunc status=none
 
-	# Rename the temporary file to target name
+# Rename the temporary file to target name
 	mv $(TMPFILE) Pac-Man.trd
 
 Pac-Man.tzx.zip:
@@ -72,7 +72,7 @@ loader.bin: src/loader.asm
 	pasmo --bin src/loader.asm loader.bin
 
 boot.bas: src/boot.bas loader.bin
-	# Replace the __LOADER__ placeholder with the machine codes with bytes represented as {XX}
+# Replace the __LOADER__ placeholder with the machine codes with bytes represented as {XX}
 	sed "s/__LOADER__/$(shell hexdump -e '1/1 "{%02x}"' loader.bin)/" src/boot.bas > boot.bas
 
 boot.tap: boot.bas
