@@ -29,7 +29,7 @@ Pac-Man.tap: Pac-Man.tzx
 	tzx2tap Pac-Man.tzx
 
 headless.000: Pac-Man.tap
-	tapto0 Pac-Man.tap
+	tapto0 -f Pac-Man.tap
 
 headless.bin: headless.000
 	0tobin headless.000
@@ -41,6 +41,7 @@ screen.tap: screen.scr
 	bin2tap -o screen.tap -a 16384 screen.scr
 
 screen.000: screen.scr
+	rm -f screen.000
 	binto0 screen.scr 3 16384
 
 screen.$$C: screen.000
@@ -54,6 +55,7 @@ data.bin: headless.bin
 	tail -c +6913 headless.bin > data.bin
 
 data.000: data.bin
+	rm -f data.000
 	binto0 data.bin 3 23296
 
 data.$$C: data.000
