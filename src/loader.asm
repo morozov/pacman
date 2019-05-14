@@ -11,10 +11,10 @@ JP $F800
 
 ; Load the image
 LD DE, ($5CF4)   ; restore the FDD head position
-LD BC, $0805     ; load 8 sectors of compressed image
-LD HL, $9C40     ; destination address (40000)
+LD BC, $0905     ; load 9 sectors of compressed image
+LD HL, $8000     ; destination address (32768)
 CALL $3D13       ;
-CALL $9C40       ; decompress the image
+CALL $8000       ; decompress the image
 
 ; Load the data
 LD DE, ($5CF4)   ; restore the FDD head position again

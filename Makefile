@@ -4,21 +4,21 @@ Pac-Man.scl: Pac-Man.trd
 # The compressed screen is created by Laser Compact v5.2
 # and cannot be generated at the build time
 # see https://spectrumcomputing.co.uk/?cat=96&id=21446
-Pac-Man.trd: boot.$$B hob/screenz.$$C data.$$C
+Pac-Man.trd: boot.$$B screen.$$C data.$$C
 # Create a temporary file first in order to make sure the target file
 # gets created only after the entire job has succeeded
 	$(eval TMPFILE=$(shell tempfile))
 
 	createtrd $(TMPFILE)
 	hobeta2trd boot.\$$B $(TMPFILE)
-	hobeta2trd hob/screenz.\$$C $(TMPFILE)
+	hobeta2trd screen.\$$C $(TMPFILE)
 	hobeta2trd data.\$$C $(TMPFILE)
 
 # Write the correct length to the first file (offset 13)
-# The lenth is 1 (boot) + 8 (loading screen) + 37 (data) = 46
+# The lenth is 1 (boot) + 9 (loading screen) + 37 (data) = 47
 # Got to use the the octal notation since it's the only format of binary data POSIX printf understands
 # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/printf.html#tag_20_94_13
-	printf '\056' | dd of=$(TMPFILE) bs=1 seek=13 conv=notrunc status=none
+	printf '\057' | dd of=$(TMPFILE) bs=1 seek=13 conv=notrunc status=none
 
 # Remove two other files (fill 2×16 bytes starting offset 16 with zeroes)
 	dd if=/dev/zero of=$(TMPFILE) bs=1 seek=16 count=32 conv=notrunc status=none
@@ -44,19 +44,17 @@ headless.bin: headless.000
 screen.scr: headless.bin
 	head -c 6912 headless.bin > screen.scr
 
-screen.tap: screen.scr
-	bin2tap -o screen.tap -a 16384 screen.scr
+screen.zx7b: screen.scr
+	zx7b screen.scr screen.zx7b
 
-screen.000: screen.scr
-	rm -f screen.000
-	binto0 screen.scr 3 16384
+screen.tap: src/screen.asm screen.zx7b
+	pasmo --tap --name screen src/screen.asm screen.tap
+
+screen.000: screen.tap
+	tapto0 -f screen.tap
 
 screen.$$C: screen.000
 	0tohob screen.000
-
-screen.trd: screen.$$C
-	createtrd screen.trd
-	hobeta2trd screen.\$$C screen.trd
 
 data.bin: headless.bin
 	tail -c +6913 headless.bin > data.bin
